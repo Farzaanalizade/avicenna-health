@@ -1,0 +1,6 @@
+{
+    "workbench.settings.useSplitJSON": false,
+    "typescript.tsserver.maxTsServerMemory": 4096,
+    "search.maxResults": 2000,
+    "workbench.editor.limit.enabled": true
+}
