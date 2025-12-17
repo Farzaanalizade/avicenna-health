@@ -1,0 +1,52 @@
+workflows:
+  android-workflow:
+    name: Android Build
+    instance_type: mac_mini_m1
+    max_build_duration: 60
+    
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      
+    triggering:
+      events:
+        - push
+        - pull_request
+      branch:
+        include:
+          - main
+          - develop
+
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          cd mobile
+          flutter pub get
+          
+      - name: Analyze
+        script: |
+          cd mobile
+          flutter analyze
+          
+      - name: Build debug APK
+        script: |
+          cd mobile
+          flutter build apk --debug
+          
+      - name: Build release APK
+        script: |
+          cd mobile
+          flutter build apk --release
+
+    artifacts:
+      - mobile/build/app/outputs/flutter-apk/app-debug.apk
+      - mobile/build/app/outputs/flutter-apk/app-release.apk
+
+    publishing:
+      email:
+        recipients:
+          - avicenna@health.dev
+        notify:
+          success: true
+          failure: true
