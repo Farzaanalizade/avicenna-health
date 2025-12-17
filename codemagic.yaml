@@ -13,8 +13,9 @@ workflows:
       events:
         - push
         - pull_request
-      include:
-        - main
+      branches:
+        include:
+          - main
 
     scripts:
       - name: Get Flutter packages
