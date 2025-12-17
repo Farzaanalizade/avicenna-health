@@ -7,7 +7,7 @@ class AppRoutes {
   static final pages = [
     GetPage(
       name: MAIN,
-      page: () => MainScreen(),
+      page: () => const MainScreen(),
     ),
   ];
 }
