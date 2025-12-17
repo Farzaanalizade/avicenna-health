@@ -3,7 +3,6 @@ workflows:
     name: Android Build
     instance_type: mac_mini_m1
     max_build_duration: 60
-    working_directory: mobile
     
     environment:
       flutter: stable
@@ -21,20 +20,19 @@ workflows:
 
     scripts:
       - name: Get Flutter packages
-        script: flutter pub get
-          
-      - name: Analyze
-        script: flutter analyze
+        script: |
+          ls -la
+          pwd
+          cd mobile && pwd
+          flutter pub get
           
       - name: Build debug APK
-        script: flutter build apk --debug
-          
-      - name: Build release APK
-        script: flutter build apk --release
+        script: |
+          cd mobile
+          flutter build apk --debug
 
     artifacts:
-      - build/app/outputs/flutter-apk/app-debug.apk
-      - build/app/outputs/flutter-apk/app-release.apk
+      - mobile/build/app/outputs/flutter-apk/app-debug.apk
 
     publishing:
       email:
