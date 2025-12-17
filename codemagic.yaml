@@ -10,7 +10,6 @@ workflows:
     triggering:
       events:
         - push
-      branch: main
 
     scripts:
       - name: Get Flutter packages
