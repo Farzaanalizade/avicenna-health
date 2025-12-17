@@ -75,17 +75,3 @@ def run_worker():
 
 if __name__ == "__main__":
     run_worker()
-        queue = Queue(name="default", connection=redis_conn)
-        
-        # ایجاد و اجرای worker
-        worker = Worker([queue], connection=redis_conn)
-        logger.info("✓ Worker آماده برای پردازش jobs")
-        worker.work(with_scheduler=False)
-        
-    except Exception as e:
-        logger.error(f"❌ خطا در اجرای worker: {e}", exc_info=True)
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    run_worker()

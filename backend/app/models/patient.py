@@ -32,3 +32,12 @@ class Patient(Base):
     audio_analyses = relationship("AudioAnalysis", back_populates="patient", cascade="all, delete-orphan")
     skin_analyses = relationship("SkinAnalysis", back_populates="patient", cascade="all, delete-orphan")
     health_reports = relationship("HealthReport", back_populates="patient", cascade="all, delete-orphan")
+    
+    # روابط با اصول تشخیصی سینا
+    pulse_analyses = relationship("PulseAnalysis", back_populates="patient", cascade="all, delete-orphan")
+    urine_analyses = relationship("UrineAnalysis", back_populates="patient", cascade="all, delete-orphan")
+    tongue_coatings = relationship("TongueCoating", back_populates="patient", cascade="all, delete-orphan")
+    diagnostic_findings = relationship("DiagnosticFinding", back_populates="patient", cascade="all, delete-orphan")
+    
+    # روابط با برنامه‌های درمانی مزاج
+    mizaj_treatments = relationship("MizajBalanceTreatment", back_populates="patient", cascade="all, delete-orphan")

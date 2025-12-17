@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🩺 Avicenna AI - Backend Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-right: 4px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .test-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .test-button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .result {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .result.success {
+            border-left: 4px solid #28a745;
+        }
+        
+        .result.error {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .result.loading {
+            border-left: 4px solid #ffc107;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #ddd;
+        }
+        
+        .status-card.active {
+            border-color: #28a745;
+            background: #f0f8f5;
+        }
+        
+        .status-card.inactive {
+            border-color: #dc3545;
+            background: #fdf5f5;
+        }
+        
+        .status-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        
+        .status-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .endpoint-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .endpoint-list li {
+            padding: 8px;
+            background: white;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+            padding-right: 15px;
+            font-size: 13px;
+        }
+        
+        .method {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🩺 Avicenna AI</h1>
+            <p>Backend API Test & Status Dashboard</p>
+            <p style="font-size: 12px; margin-top: 10px;">Traditional Persian Medicine Diagnostic Platform</p>
+        </div>
+        
+        <div class="content">
+            <!-- Status Section -->
+            <div class="section">
+                <h2>📊 System Status</h2>
+                <div class="status-grid" id="statusGrid">
+                    <div class="status-card" id="backendStatus">
+                        <div class="status-icon">⚙️</div>
+                        <div class="status-label">Backend</div>
+                        <div id="backendText">Checking...</div>
+                    </div>
+                    <div class="status-card" id="databaseStatus">
+                        <div class="status-icon">💾</div>
+                        <div class="status-label">Database</div>
+                        <div id="databaseText">Checking...</div>
+                    </div>
+                    <div class="status-card" id="apiStatus">
+                        <div class="status-icon">🌐</div>
+                        <div class="status-label">API</div>
+                        <div id="apiText">Checking...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API Tests Section -->
+            <div class="section">
+                <h2>🧪 API Tests</h2>
+                
+                <div>
+                    <h3 style="font-size: 14px; margin-bottom: 10px; color: #333;">Root & Health</h3>
+                    <button class="test-button" onclick="testEndpoint('/') ">Test Root</button>
+                    <button class="test-button" onclick="testEndpoint('/health')">Test Health</button>
+                    <button class="test-button" onclick="testEndpoint('/health/system')">Test System</button>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px; color: #333;">Patient Management</h3>
+                    <button class="test-button" onclick="testEndpoint('/api/demo/patient')">Demo Patient</button>
+                    <button class="test-button" onclick="testEndpoint('/api/demo/health-data')">Demo Health Data</button>
+                    <button class="test-button" onclick="testEndpoint('/api/demo/diagnosis')">Demo Diagnosis</button>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px; color: #333;">Health Analysis</h3>
+                    <button class="test-button" onclick="testAnalysis('pulse')">Pulse Analysis</button>
+                    <button class="test-button" onclick="testAnalysis('tongue')">Tongue Analysis</button>
+                    <button class="test-button" onclick="testAnalysis('quick-check')">Quick Check</button>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px; color: #333;">Data</h3>
+                    <button class="test-button" onclick="testEndpoint('/api/v1/diseases')">Diseases</button>
+                    <button class="test-button" onclick="testEndpoint('/api/v1/remedies')">Remedies</button>
+                    <button class="test-button" onclick="testEndpoint('/api/v1/symptoms')">Symptoms</button>
+                </div>
+                
+                <div id="result" class="result loading" style="display:none;"></div>
+            </div>
+            
+            <!-- Available Endpoints Section -->
+            <div class="section">
+                <h2>📍 Available Endpoints</h2>
+                <ul class="endpoint-list">
+                    <li>GET <strong>/</strong> <span class="method">Root</span></li>
+                    <li>GET <strong>/health</strong> <span class="method">Health</span></li>
+                    <li>GET <strong>/docs</strong> <span class="method">Swagger UI</span></li>
+                    <li>GET <strong>/api/demo/patient</strong> <span class="method">Demo</span></li>
+                    <li>GET <strong>/api/demo/health-data</strong> <span class="method">Demo</span></li>
+                    <li>GET <strong>/api/demo/diagnosis</strong> <span class="method">Demo</span></li>
+                    <li>POST <strong>/api/auth/register</strong> <span class="method">Auth</span></li>
+                    <li>POST <strong>/health/pulse/analyze</strong> <span class="method">Analysis</span></li>
+                    <li>POST <strong>/health/tongue/analyze</strong> <span class="method">Analysis</span></li>
+                    <li>GET <strong>/api/v1/diseases</strong> <span class="method">Data</span></li>
+                </ul>
+            </div>
+            
+            <!-- Documentation Section -->
+            <div class="section">
+                <h2>📚 Resources</h2>
+                <p style="margin-bottom: 10px;">
+                    <strong>API Documentation:</strong> 
+                    <a href="http://localhost:8000/docs" target="_blank" style="color: #667eea;">http://localhost:8000/docs</a>
+                </p>
+                <p style="margin-bottom: 10px;">
+                    <strong>OpenAPI Schema:</strong> 
+                    <a href="http://localhost:8000/openapi.json" target="_blank" style="color: #667eea;">http://localhost:8000/openapi.json</a>
+                </p>
+                <p>
+                    <strong>Backend Server:</strong> 
+                    <a href="http://localhost:8000" target="_blank" style="color: #667eea;">http://localhost:8000</a>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🩺 Avicenna AI - Traditional Persian Medicine Platform</p>
+            <p>Backend Status: Ready | Mobile App: Building | System: Operational</p>
+        </div>
+    </div>
+    
+    <script>
+        const BASE_URL = 'http://localhost:8000';
+        
+        // Check system status on page load
+        window.addEventListener('load', () => {
+            checkStatus();
+            setInterval(checkStatus, 5000); // Check every 5 seconds
+        });
+        
+        async function checkStatus() {
+            try {
+                const response = await fetch(BASE_URL + '/');
+                if (response.ok) {
+                    document.getElementById('backendStatus').classList.add('active');
+                    document.getElementById('backendText').textContent = '✅ Online';
+                    document.getElementById('apiStatus').classList.add('active');
+                    document.getElementById('apiText').textContent = '✅ Active';
+                } else {
+                    document.getElementById('backendStatus').classList.add('inactive');
+                    document.getElementById('backendText').textContent = '❌ Offline';
+                }
+                
+                const healthResponse = await fetch(BASE_URL + '/health');
+                if (healthResponse.ok) {
+                    const data = await healthResponse.json();
+                    if (data.database === 'connected') {
+                        document.getElementById('databaseStatus').classList.add('active');
+                        document.getElementById('databaseText').textContent = '✅ Connected';
+                    }
+                }
+            } catch (error) {
+                console.error('Status check failed:', error);
+                document.getElementById('backendStatus').classList.add('inactive');
+                document.getElementById('backendText').textContent = '❌ Error';
+            }
+        }
+        
+        async function testEndpoint(endpoint) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result loading';
+            resultDiv.textContent = '⏳ Testing ' + endpoint + '...';
+            
+            try {
+                const response = await fetch(BASE_URL + endpoint);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ Status: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ Status: ' + response.status + '\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ Error: ' + error.message;
+            }
+        }
+        
+        async function testAnalysis(type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result loading';
+            resultDiv.textContent = '⏳ Testing ' + type + ' analysis...';
+            
+            let endpoint = '/health/' + type + '/analyze';
+            let data = {};
+            
+            if (type === 'pulse') {
+                data = { bpm: 72, quality: 'strong' };
+            } else if (type === 'tongue') {
+                data = { color: 'red', coating: 'white' };
+            } else if (type === 'quick-check') {
+                endpoint = '/health/quick-check';
+                data = { symptoms: ['fatigue', 'headache'] };
+            }
+            
+            try {
+                const response = await fetch(BASE_URL + endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const responseData = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = '✅ Status: ' + response.status + '\n\n' + JSON.stringify(responseData, null, 2);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ Status: ' + response.status + '\n\n' + JSON.stringify(responseData, null, 2);
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

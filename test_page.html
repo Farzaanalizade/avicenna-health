@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avicenna AI - Health Diagnostic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'IranSans', 'Vazirmatn', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .status {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .status-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .status-item h3 {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .status-item p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .status-item.online {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .status-item.online p {
+            color: #4caf50;
+        }
+        
+        .info-box {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .info-box p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .api-endpoints {
+            margin-top: 20px;
+        }
+        
+        .api-endpoints h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .endpoint-list {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            font-family: monospace;
+        }
+        
+        .endpoint-list a {
+            display: block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        .endpoint-list a:hover {
+            background: white;
+            padding-left: 10px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin-top: 10px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .response {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .response.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 Avicenna AI</h1>
+        <p class="subtitle">سامانه تشخیص سلامت بر اساس طب سنتی ایرانی</p>
+        
+        <div class="status">
+            <div class="status-item online">
+                <h3>Backend</h3>
+                <p id="backend-status">⏳</p>
+            </div>
+            <div class="status-item">
+                <h3>Mobile</h3>
+                <p id="mobile-status">✅ Ready</p>
+            </div>
+            <div class="status-item online">
+                <h3>API Version</h3>
+                <p id="api-version">v1.0.0</p>
+            </div>
+            <div class="status-item">
+                <h3>Status</h3>
+                <p id="overall-status">⏳</p>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h4>📡 API Endpoints</h4>
+            <p>Base URL: <code>http://localhost:8000</code></p>
+        </div>
+        
+        <div class="api-endpoints">
+            <h4>🔗 Available Endpoints:</h4>
+            <div class="endpoint-list">
+                <a href="http://localhost:8000/" target="_blank">GET / (Root)</a>
+                <a href="http://localhost:8000/health" target="_blank">GET /health</a>
+                <a href="http://localhost:8000/docs" target="_blank">📚 GET /docs (Swagger UI)</a>
+                <a href="#" onclick="testEndpoint('/api/auth/login')">POST /api/auth/login</a>
+                <a href="http://localhost:8000/api/v1/diseases" target="_blank">GET /api/v1/diseases</a>
+                <a href="http://localhost:8000/api/v1/remedies" target="_blank">GET /api/v1/remedies</a>
+                <a href="http://localhost:8000/api/v1/symptoms" target="_blank">GET /api/v1/symptoms</a>
+            </div>
+        </div>
+        
+        <button onclick="checkBackend()">✅ Check Backend Connection</button>
+        
+        <div class="loading" id="loading">
+            ⏳ Checking...
+        </div>
+        
+        <div class="response" id="response">
+        </div>
+    </div>
+    
+    <script>
+        async function checkBackend() {
+            const loading = document.getElementById('loading');
+            const response = document.getElementById('response');
+            const status = document.getElementById('backend-status');
+            const overall = document.getElementById('overall-status');
+            
+            loading.classList.add('show');
+            response.classList.remove('show');
+            
+            try {
+                const res = await fetch('http://localhost:8000/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const data = await res.json();
+                
+                response.textContent = JSON.stringify(data, null, 2);
+                response.classList.add('show');
+                
+                status.textContent = '✅ Online';
+                status.parentElement.classList.add('online');
+                overall.textContent = '✅ Ready';
+                overall.parentElement.classList.add('online');
+                
+            } catch (error) {
+                response.textContent = `❌ Error: ${error.message}\n\nMake sure backend is running at http://localhost:8000`;
+                response.classList.add('show');
+                
+                status.textContent = '❌ Offline';
+                status.parentElement.classList.remove('online');
+                overall.textContent = '⚠️ Backend Down';
+                overall.parentElement.classList.remove('online');
+            }
+            
+            loading.classList.remove('show');
+        }
+        
+        function testEndpoint(endpoint) {
+            alert('This would test: ' + endpoint);
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', checkBackend);
+    </script>
+</body>
+</html>

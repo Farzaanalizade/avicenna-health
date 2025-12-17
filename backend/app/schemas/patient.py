@@ -29,6 +29,10 @@ class PatientUpdate(BaseModel):
     medical_history: Optional[str] = None
     lifestyle_info: Optional[str] = None
 
+class PatientCreate(PatientBase):
+    """برای ایجاد بیمار جدید"""
+    pass
+
 class PatientResponse(PatientBase):
     id: int
     is_active: bool = True

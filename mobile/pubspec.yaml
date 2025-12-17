@@ -1,0 +1,97 @@
+name: avicenna_health
+description: "Avicenna Health - Traditional Persian Medicine Diagnostic Platform"
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Navigation
+  get: ^4.6.5
+  get_storage: ^2.1.1
+  
+  # HTTP & API
+  http: ^1.1.0
+  dio: ^5.3.1
+  
+  # State Management
+  get_it: ^7.6.0
+  
+  # Models & Serialization
+  json_annotation: ^4.8.1
+  
+  # Image & File Handling
+  image_picker: ^1.0.4
+  image: ^4.0.17
+  
+  # 📸 CAMERA (Phase 2)
+  camera: ^0.11.0
+  
+  # 📡 SENSORS & DEVICE DATA (Phase 2)
+  sensors_plus: ^2.0.0
+  device_info_plus: ^9.0.0
+  
+  # 🔌 BLUETOOTH & WEARABLES (Phase 2)
+  flutter_blue_plus: ^1.25.0
+  permission_handler: ^11.0.0
+  
+  # 🎵 AUDIO PROCESSING (Phase 2)
+  record: ^4.4.4
+  path_provider: ^2.1.0
+  
+  #  LOCAL DATABASE
+  sqflite: ^2.3.0
+  path: ^1.8.3
+  
+  # 🛠️ UTILITIES
+  uuid: ^4.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+  build_runner: ^2.4.6
+  
+  # Testing
+  mockito: ^5.4.4
+  mocktail: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Assets
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
+    - assets/data/
+    - assets/fonts/
+
+  # Fonts
+  fonts:
+    - family: IranSans
+      fonts:
+        - asset: assets/fonts/IranSans.ttf
+          weight: 400
+        - asset: assets/fonts/IranSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/IranSans-Light.ttf
+          weight: 300
+    
+    - family: Vazirmatn
+      fonts:
+        - asset: assets/fonts/Vazirmatn-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Vazirmatn-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Vazirmatn-Light.ttf
+          weight: 300

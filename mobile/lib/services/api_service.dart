@@ -1,9 +1,9 @@
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import '../config/app_config.dart';
 
 class ApiService {
-  late Dio _dio;
+  late dio.Dio _dio;
   String? _token;
 
   ApiService() {
@@ -12,8 +12,8 @@ class ApiService {
 
   /// Initialize Dio with interceptors
   void _initializeDio() {
-    _dio = Dio(
-      BaseOptions(
+    _dio = dio.Dio(
+      dio.BaseOptions(
         baseUrl: AppConfig.apiBaseUrl,
         connectTimeout: AppConfig.apiTimeout,
         receiveTimeout: AppConfig.apiTimeout,
@@ -26,7 +26,7 @@ class ApiService {
 
     // Add interceptors
     _dio.interceptors.add(
-      InterceptorsWrapper(
+      dio.InterceptorsWrapper(
         onRequest: (options, handler) {
           if (_token != null) {
             options.headers['Authorization'] = 'Bearer $_token';
@@ -115,8 +115,8 @@ class ApiService {
     String filePath,
   ) async {
     try {
-      final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(filePath),
+      final formData = dio.FormData.fromMap({
+        'file': await dio.MultipartFile.fromFile(filePath),
       });
 
       final response = await _dio.post(endpoint, data: formData);
@@ -127,21 +127,21 @@ class ApiService {
   }
 
   /// Handle response
-  Map<String, dynamic> _handleResponse(Response response) {
+  Map<String, dynamic> _handleResponse(dio.Response response) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       return response.data as Map<String, dynamic>;
     }
-    throw DioException(
+    throw dio.DioException(
       requestOptions: response.requestOptions,
       response: response,
-      type: DioExceptionType.response,
+      type: dio.DioExceptionType.badResponse,
       message: 'Server error: ${response.statusCode}',
     );
   }
 
   /// Handle errors
   String _handleError(dynamic error) {
-    if (error is DioException) {
+    if (error is dio.DioException) {
       if (error.response != null) {
         final message = error.response?.data['detail'] ??
             error.response?.data['message'] ??
@@ -150,15 +150,15 @@ class ApiService {
       }
       
       switch (error.type) {
-        case DioExceptionType.connectionTimeout:
+        case dio.DioExceptionType.connectionTimeout:
           return 'Connection timeout';
-        case DioExceptionType.sendTimeout:
+        case dio.DioExceptionType.sendTimeout:
           return 'Send timeout';
-        case DioExceptionType.receiveTimeout:
+        case dio.DioExceptionType.receiveTimeout:
           return 'Receive timeout';
-        case DioExceptionType.response:
+        case dio.DioExceptionType.badResponse:
           return 'Response error: ${error.response?.statusCode}';
-        case DioExceptionType.cancel:
+        case dio.DioExceptionType.cancel:
           return 'Request cancelled';
         default:
           return 'Network error';

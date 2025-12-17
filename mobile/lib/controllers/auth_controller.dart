@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../services/api_service.dart';
-import '../models/health_record.dart';
 
 class AuthController extends GetxController {
   // Observables
@@ -49,7 +48,7 @@ class AuthController extends GetxController {
       isLoading.value = true;
       errorMessage.value = null;
 
-      final response = await _apiService.post(
+      await _apiService.post(
         '/auth/register',
         {
           'username': username,

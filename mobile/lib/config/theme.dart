@@ -32,7 +32,6 @@ class AppTheme {
         secondary: accentColor,
         onSecondary: Colors.white,
         error: errorColor,
-        background: backgroundColor,
         surface: surfaceColor,
       ),
 
@@ -45,7 +44,7 @@ class AppTheme {
       ),
 
       // Card Theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -152,7 +151,7 @@ class AppTheme {
       ),
 
       // Dialog Theme
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -181,7 +180,6 @@ class AppTheme {
         secondary: accentColor,
         onSecondary: Colors.white,
         error: errorColor,
-        background: Color(0xFF1F2937),
         surface: Color(0xFF374151),
       ),
 

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'lib/config/theme.dart';
-import 'lib/config/routes.dart';
-import 'lib/config/app_config.dart';
-import 'lib/controllers/auth_controller.dart';
+import 'screens/main_screen.dart';
+import 'database/app_database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize AppConfig
-  await AppConfig.init();
-  
-  // Initialize GetX controllers
-  Get.put(AuthController());
-  
+
+  // Initialize database
+  await AppDatabase().database;
+
   runApp(const AvicentaApp());
 }
 
@@ -23,22 +18,13 @@ class AvicentaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Avicenna Health',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      
-      // RTL Support
-      locale: const Locale('fa'),
-      fallbackLocale: const Locale('en'),
-      
-      // Routes
-      initialRoute: '/splash',
-      getPages: AppRoutes.pages,
-      
-      // Settings
+      title: '🏥 Avicenna Health',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        useMaterial3: true,
+      ),
       debugShowCheckedModeBanner: false,
-      enableLog: false,
+      home: MainScreen(),
     );
   }
 }

@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from app.database import engine, Base, get_db
 from app.routers import auth, patients, health
+from app.routers import avicenna_diagnosis, avicenna_diseases, analysis_service
 from app.core.config import settings
 from app.services.health_check import (
     get_health_check_endpoint,
@@ -17,6 +18,8 @@ from app.models import user  # noqa: F401
 from app.models import health_record  # noqa: F401
 from app.models import health_data  # noqa: F401
 from app.models import doctor  # noqa: F401
+from app.models import avicenna_diagnosis as avicenna_diag  # noqa: F401
+from app.models import avicenna_diseases as avicenna_dis  # noqa: F401
 
 # ایجاد جداول
 Base.metadata.create_all(bind=engine)
@@ -40,6 +43,9 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(patients.router)
 app.include_router(health.router)
+app.include_router(avicenna_diagnosis.router)
+app.include_router(avicenna_diseases.router)
+app.include_router(analysis_service.router)
 
 @app.get("/")
 def root():

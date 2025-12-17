@@ -18,6 +18,20 @@ from app.schemas.health import (
     FoodRecommendation, HerbalRecommendation,
     HealthRecordReport
 )
+from app.schemas.avicenna_diagnosis import (
+    PulseAnalysisCreate, PulseAnalysisResponse,
+    UrineAnalysisCreate, UrineAnalysisResponse,
+    TongueCoatingCreate, TongueCoatingResponse,
+    DiagnosticFindingCreate, DiagnosticFindingResponse
+)
+from app.schemas.avicenna_diseases import (
+    DiseaseCreate, DiseaseResponse,
+    SymptomCreate, SymptomResponse,
+    TraditionalRemedyCreate, TraditionalRemedyResponse,
+    DiseaseRemedyRelationCreate, DiseaseRemedyRelationResponse,
+    MizajBalanceTreatmentCreate, MizajBalanceTreatmentResponse,
+    MedicalPlantCreate, MedicalPlantResponse
+)
 # بقیه importهای patient, auth و سایر بخش‌ها هم طبق نیاز پروژه اضافه شوند
 
 
