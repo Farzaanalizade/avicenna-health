@@ -23,7 +23,7 @@ dependencies:
   dio: ^5.3.1
   
   # State Management
-  get_it: ^7.6.0
+  get_it: ^9.2.0
   
   # Models & Serialization
   json_annotation: ^4.8.1
@@ -36,15 +36,15 @@ dependencies:
   camera: ^0.11.0
   
   # 📡 SENSORS & DEVICE DATA (Phase 2)
-  sensors_plus: ^2.0.0
-  device_info_plus: ^9.0.0
+  sensors_plus: ^7.0.0
+  device_info_plus: ^12.0.0
   
   # 🔌 BLUETOOTH & WEARABLES (Phase 2)
-  flutter_blue_plus: ^1.25.0
-  permission_handler: ^11.0.0
+  flutter_blue_plus: ^2.0.0
+  permission_handler: ^12.0.0
   
   # 🎵 AUDIO PROCESSING (Phase 2)
-  record: ^4.4.4
+  record: ^6.1.2
   path_provider: ^2.1.0
   
   #  LOCAL DATABASE
