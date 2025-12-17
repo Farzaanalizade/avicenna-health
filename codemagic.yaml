@@ -13,13 +13,13 @@ workflows:
       events:
         - push
         - pull_request
-      branch:
-        include:
-          - main
+      include:
+        - main
 
     scripts:
       - name: Get Flutter packages
         script: |
+          flutter pub get
           cd mobile
           flutter pub get
           
