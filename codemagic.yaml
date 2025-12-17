@@ -16,14 +16,11 @@ workflows:
       branch:
         include:
           - main
-          - develop
 
     scripts:
       - name: Get Flutter packages
         script: |
-          ls -la
-          pwd
-          cd mobile && pwd
+          cd mobile
           flutter pub get
           
       - name: Build debug APK
