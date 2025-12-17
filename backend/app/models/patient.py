@@ -41,3 +41,7 @@ class Patient(Base):
     
     # روابط با برنامه‌های درمانی مزاج
     mizaj_treatments = relationship("MizajBalanceTreatment", back_populates="patient", cascade="all, delete-orphan")
+    
+    # روابط با داده‌های سنسور و دستگاه‌های پوشیدنی
+    sensor_data = relationship("SensorData", back_populates="patient", cascade="all, delete-orphan")
+    wearable_devices = relationship("WearableDevice", back_populates="patient", cascade="all, delete-orphan")

@@ -1,0 +1,108 @@
+name: Mobile Build & Distribution
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'mobile/**'
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+        cache: gradle
+    
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.10.0'
+        cache: true
+    
+    - name: Install dependencies
+      run: |
+        cd mobile
+        flutter pub get
+    
+    - name: Build APK
+      run: |
+        cd mobile
+        flutter build apk --release
+      env:
+        API_BASE_URL: ${{ secrets.API_BASE_URL }}
+    
+    - name: Upload APK to artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-release
+        path: mobile/build/app/outputs/flutter-apk/app-release.apk
+    
+    - name: Upload to Firebase App Distribution
+      uses: wzieba/Firebase-Distribution-Github-Action@v1
+      with:
+        appId: ${{ secrets.FIREBASE_APP_ID_ANDROID }}
+        serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        file: mobile/build/app/outputs/flutter-apk/app-release.apk
+        releaseNotes: "Build from GitHub Actions - ${{ github.sha }}"
+        testers: ${{ secrets.BETA_TESTERS_GROUP }}
+
+  build-ios:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.10.0'
+        cache: true
+    
+    - name: Install dependencies
+      run: |
+        cd mobile
+        flutter pub get
+    
+    - name: Build iOS
+      run: |
+        cd mobile
+        flutter build ios --release --no-codesign
+    
+    - name: Create IPA
+      run: |
+        cd mobile/build/ios/Release-iphoneos
+        mkdir Payload
+        mv Runner.app Payload/
+        zip -r app.ipa Payload/
+    
+    - name: Upload to TestFlight
+      uses: Apple-Actions/upload-testflight-build@v1
+      with:
+        app-path: mobile/build/ios/Release-iphoneos/app.ipa
+        issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+        api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+        api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+  notify:
+    needs: [build-android, build-ios]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Send Slack notification
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: |
+          📱 Mobile builds completed
+          Android: ${{ needs.build-android.result }}
+          iOS: ${{ needs.build-ios.result }}
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}

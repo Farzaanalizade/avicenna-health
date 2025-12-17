@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'screens/main_screen.dart';
+import 'config/routes.dart';
+import 'config/theme.dart';
 import 'database/app_database.dart';
 
 void main() async {
@@ -19,12 +20,17 @@ class AvicentaApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: '🏥 Avicenna Health',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: const MainScreen(),
+      
+      // Use named routes
+      initialRoute: AppRoutes.SPLASH,
+      getPages: AppPages.pages,
+      
+      // Global navigation settings
+      navigatorObservers: [
+        GetNavigatorObserver(),
+      ],
     );
   }
 }
